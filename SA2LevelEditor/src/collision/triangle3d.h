@@ -33,7 +33,8 @@ public:
     float maxZ;
     float minZ;
 
-    Triangle3D(Vector3f* newP1, Vector3f* newP2, Vector3f* newP3);
+
+	Triangle3D(Vector3f* newP1, Vector3f* newP2, Vector3f* newP3);
 
     void generateValues();
 };
