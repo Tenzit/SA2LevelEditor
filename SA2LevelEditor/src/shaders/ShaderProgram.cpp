@@ -70,6 +70,11 @@ void ShaderProgram::loadTransparency(int transparency)
     loadInt(location_hasTransparency, transparency);
 }
 
+void ShaderProgram::loadHasTexture(int hasTexture)
+{
+    loadInt(location_hasTexture, hasTexture);
+}
+
 void ShaderProgram::loadBaseColour(Vector3f* baseColour)
 {
     loadVector(location_baseColour, baseColour);
@@ -111,6 +116,7 @@ void ShaderProgram::getAllUniformLocations()
     location_clipPlaneBehind       = getUniformLocation("clipPlaneBehind");
     location_mixFactor             = getUniformLocation("mixFactor");
     location_textureSampler2       = getUniformLocation("textureSampler2");
+    location_hasTexture = getUniformLocation("hasTexture");
 }
 
 int ShaderProgram::getUniformLocation(const char* uniformName)

@@ -10,20 +10,25 @@ uniform sampler2D textureSampler2;
 uniform int   hasTransparency;
 uniform vec3  baseColour;
 uniform float mixFactor;
+uniform int hasTexture;
 
 void main(void)
 {
-	vec4 rawTextureColour = mix(texture(textureSampler, pass_textureCoords), texture(textureSampler2, pass_textureCoords), mixFactor);
-    rawTextureColour.rgb *= baseColour*color;
+	if (hasTexture != 0) {
+		vec4 rawTextureColour = mix(texture(textureSampler, pass_textureCoords), texture(textureSampler2, pass_textureCoords), mixFactor);
+		rawTextureColour.rgb *= baseColour*color;
     
-	if (hasTransparency == 0)
-	{
-		if (rawTextureColour.a < 0.9)
+		if (hasTransparency == 0)
 		{
-			discard;
+			if (rawTextureColour.a < 0.9)
+			{
+				discard;
+			}
+			rawTextureColour.a = 1;
 		}
-		rawTextureColour.a = 1;
-	}
 	
-	out_Color = rawTextureColour;
+		out_Color = rawTextureColour;
+	} else {
+		out_Color = vec4(baseColour*color,1.0);
+	}
 }

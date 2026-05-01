@@ -29,11 +29,18 @@ void EntityRenderer::renderNEW(std::unordered_map<TexturedModel*, std::list<Enti
     {
         prepareTexturedModel(entry.first);
         std::list<Entity*>* entityList = &entry.second;
-
+        int noTexture = entry.first->getTexture()->getIDs()->size() == 0;
+        if (noTexture) {
+            glLineWidth(2.0);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
         for (Entity* entity : (*entityList))
         {
             prepareInstance(entity);
             glDrawElements(GL_TRIANGLES, (entry.first)->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
+        }
+        if (noTexture) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
         unbindTexturedModel();
     }
@@ -60,10 +67,17 @@ void EntityRenderer::prepareTexturedModel(TexturedModel* model)
     shader->loadTransparency(texture->hasTransparency);
     shader->loadTextureOffsets(clockTime * (texture->scrollX), clockTime * (texture->scrollY));
     shader->loadMixFactor(texture->mixFactor());
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture->getID());
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture->getID2());
+    if (texture->getIDs()->size() > 0) {
+        shader->loadHasTexture(1);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture->getID());
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture->getID2());
+
+    }
+    else {
+        shader->loadHasTexture(0);
+    }
 }
 
 void EntityRenderer::unbindTexturedModel()
