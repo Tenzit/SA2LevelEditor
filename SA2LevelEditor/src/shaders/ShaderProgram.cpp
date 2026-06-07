@@ -92,6 +92,7 @@ void ShaderProgram::bindAttributes()
     bindAttribute(1, "textureCoords");
     bindAttribute(2, "normal");
     bindAttribute(3, "vertexColor");
+    bindAttribute(4, "bary");
 }
 
 void ShaderProgram::bindAttribute(int attribute, const char* variableName)

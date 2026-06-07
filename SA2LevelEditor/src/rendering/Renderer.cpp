@@ -30,17 +30,15 @@ void EntityRenderer::renderNEW(std::unordered_map<TexturedModel*, std::list<Enti
         prepareTexturedModel(entry.first);
         std::list<Entity*>* entityList = &entry.second;
         int noTexture = entry.first->getTexture()->getIDs()->size() == 0;
-        if (noTexture) {
-            glLineWidth(2.0);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        }
         for (Entity* entity : (*entityList))
         {
             prepareInstance(entity);
-            glDrawElements(GL_TRIANGLES, (entry.first)->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
-        }
-        if (noTexture) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            if (noTexture) {
+                glDrawElements(GL_TRIANGLE_STRIP, (entry.first)->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
+            }
+            else {
+                glDrawElements(GL_TRIANGLES, (entry.first)->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
+            }
         }
         unbindTexturedModel();
     }
@@ -54,8 +52,11 @@ void EntityRenderer::prepareTexturedModel(TexturedModel* model)
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
 
     ModelTexture* texture = model->getTexture();
+    int noTexture = texture->getIDs()->size() == 0;
+
     //if (texture->getHasTransparency() != 0)
     {
         //Master_disableCulling();
@@ -86,6 +87,7 @@ void EntityRenderer::unbindTexturedModel()
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
     glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
     glBindVertexArray(0);
 }
 

@@ -2,6 +2,7 @@
 
 in vec2 pass_textureCoords;
 in vec3 color;
+in vec3 vBary;
 
 out vec4 out_Color;
 
@@ -29,6 +30,10 @@ void main(void)
 	
 		out_Color = rawTextureColour;
 	} else {
-		out_Color = vec4(baseColour*color,1.0);
+		float edge = min(vBary.x, min(vBary.y, vBary.z));
+		if (edge < 0.01)
+			out_Color = vec4(0.0, 0.0, 0.0, 1.0);
+		else
+			out_Color = vec4(baseColour*color,1.0);
 	}
 }
